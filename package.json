@@ -45,13 +45,17 @@
     "productName": "AudioCV",
     "mac": {
       "target": [
-        "dmg",
+        {
+          "target": "dmg",
+          "arch": ["x64", "arm64"]
+        },
         "zip"
       ],
       "category": "public.app-category.audio",
       "icon": "build/icon.icns",
-      "entitlements": "build/entitlements.mac.plist",
-      "entitlementsInherit": "build/entitlements.mac.plist"
+      "identity": null,
+      "hardenedRuntime": false,
+      "gatekeeperAssess": false
     },
     "win": {
       "target": [
