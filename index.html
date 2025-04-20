@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AudioCV</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>AudioCV</h1>
+    </header>
+
+    <div class="content">
+      <div class="input-section">
+        <label for="fileInput">Select Audio File:</label>
+        <button class="button" id="fileSelectBtn">Choose File</button>
+        <div id="fileInfo" class="file-info"></div>
+      </div>
+
+      <div class="input-section">
+        <label for="outputFolder">Select Output Folder:</label>
+        <input type="text" id="outputFolder" readonly />
+        <button class="button" id="folderSelectBtn">Choose Folder</button>
+      </div>
+
+      <div class="convert-section">
+        <button class="button convert-btn" id="convertBtn">Convert to 8D</button>
+        <div class="progress-container">
+          <div class="progress-bar" id="progressBar">
+            <div class="progress-text" id="progressText">0%</div>
+          </div>
+        </div>
+        <div class="status-container">
+          <p id="status" class="status-text"></p>
+          <p id="timeRemaining" class="time-text"></p>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <p>Powered by 8D Audio Converter</p>
+    </footer>
+  </div>
+
+  <script src="renderer.js"></script>
+</body>
+</html>
