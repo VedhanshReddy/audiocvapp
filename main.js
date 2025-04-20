@@ -2,12 +2,69 @@ const { app, BrowserWindow, ipcMain, dialog, Menu, shell } = require('electron')
 const { autoUpdater } = require('electron-updater');
 const log = require('electron-log');
 const os = require('os');
+const https = require('https');
 
 let mainWindow;
 
 // Set up logging for updates
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
+
+// Configure auto-updater
+autoUpdater.autoDownload = true;
+autoUpdater.autoInstallOnAppQuit = true;
+autoUpdater.checkForUpdatesOnStart = true;
+
+// Auto-update events
+autoUpdater.on('checking-for-update', () => {
+  log.info('Checking for updates...');
+});
+
+autoUpdater.on('update-available', (info) => {
+  log.info('Update available:', info);
+  dialog.showMessageBox({
+    type: 'info',
+    title: 'Update Available',
+    message: `Version ${info.version} is available. Downloading now...`,
+    buttons: ['OK']
+  });
+});
+
+autoUpdater.on('download-progress', (progress) => {
+  log.info(`Download progress: ${progress.percent}%`);
+  if (mainWindow) {
+    mainWindow.setProgressBar(progress.percent / 100);
+  }
+});
+
+autoUpdater.on('update-downloaded', (info) => {
+  log.info('Update downloaded:', info);
+  dialog.showMessageBox({
+    type: 'info',
+    title: 'Update Ready',
+    message: `Version ${info.version} has been downloaded. Would you like to install it now?`,
+    buttons: ['Install and Restart', 'Later']
+  }).then(result => {
+    if (result.response === 0) {
+      autoUpdater.quitAndInstall(false, true);
+    }
+  });
+});
+
+// Check for updates every 4 hours
+function setupAutoUpdates() {
+  if (os.platform() === 'win32') {
+    autoUpdater.checkForUpdates();
+    setInterval(() => {
+      autoUpdater.checkForUpdates();
+    }, 4 * 60 * 60 * 1000);
+  } else if (os.platform() === 'darwin') {
+    // Check for updates on macOS
+    checkGitHubRelease();
+    // Check every 4 hours
+    setInterval(checkGitHubRelease, 4 * 60 * 60 * 1000);
+  }
+}
 
 // Create the main application window
 function createWindow() {
@@ -21,27 +78,57 @@ function createWindow() {
   });
 
   mainWindow.loadFile('index.html');
-
-  // Only enable auto-updates on Windows
-  if (os.platform() === 'win32') {
-    autoUpdater.checkForUpdates();
-  } else {
-    // On macOS, just check GitHub manually and show a prompt
-    checkManualUpdatesMac();
-  }
+  
+  setupAutoUpdates();
 }
 
 // Manual update prompt for macOS users
-function checkManualUpdatesMac() {
+function checkManualUpdatesMac(newVersion = '') {
+  const message = newVersion ? 
+      `Version ${newVersion} is available. Please download the latest version from GitHub.` :
+      'To update AudioCV on macOS, please download the latest version from GitHub.';
+
   dialog.showMessageBox({
     type: 'info',
-    title: 'Check for Updates',
-    message: 'To update AudioCV on macOS, please download the latest version from GitHub.',
-    buttons: ['Open GitHub', 'Cancel']
+    title: 'Update Available',
+    message: message,
+    buttons: ['Open GitHub', 'Later']
   }).then(result => {
     if (result.response === 0) {
       shell.openExternal('https://github.com/VedhanshReddy/audiocvapp/releases');
     }
+  });
+}
+
+// Add fetch for GitHub API
+function checkGitHubRelease() {
+  const options = {
+    hostname: 'api.github.com',
+    path: '/repos/VedhanshReddy/audiocvapp/releases/latest',
+    headers: { 'User-Agent': 'AudioCV' }
+  };
+
+  https.get(options, (res) => {
+    let data = '';
+    res.on('data', chunk => data += chunk);
+    res.on('end', () => {
+      try {
+        const release = JSON.parse(data);
+        const latestVersion = release.tag_name;
+        const currentVersion = app.getVersion();
+        
+        log.info('Current version:', currentVersion);
+        log.info('Latest version:', latestVersion);
+
+        if (latestVersion > currentVersion) {
+          checkManualUpdatesMac(latestVersion);
+        }
+      } catch (error) {
+        log.error('Failed to check GitHub release:', error);
+      }
+    });
+  }).on('error', (err) => {
+    log.error('GitHub API request failed:', err);
   });
 }
 
