@@ -1,6 +1,7 @@
-const { app, BrowserWindow, ipcMain, dialog, Menu } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, Menu, shell } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const log = require('electron-log');
+const os = require('os');
 
 let mainWindow;
 
@@ -21,11 +22,30 @@ function createWindow() {
 
   mainWindow.loadFile('index.html');
 
-  // Check for updates when window is ready
-  autoUpdater.checkForUpdates();
+  // Only enable auto-updates on Windows
+  if (os.platform() === 'win32') {
+    autoUpdater.checkForUpdates();
+  } else {
+    // On macOS, just check GitHub manually and show a prompt
+    checkManualUpdatesMac();
+  }
 }
 
-// Show dialogs based on update events
+// Manual update prompt for macOS users
+function checkManualUpdatesMac() {
+  dialog.showMessageBox({
+    type: 'info',
+    title: 'Check for Updates',
+    message: 'To update AudioCV on macOS, please download the latest version from GitHub.',
+    buttons: ['Open GitHub', 'Cancel']
+  }).then(result => {
+    if (result.response === 0) {
+      shell.openExternal('https://github.com/VedhanshReddy/audiocvapp/releases');
+    }
+  });
+}
+
+// Windows auto-updater event handlers
 autoUpdater.on('update-available', () => {
   dialog.showMessageBox({
     type: 'info',
@@ -45,7 +65,7 @@ autoUpdater.on('update-downloaded', () => {
   });
 });
 
-// Add menu with "Check for Updates"
+// App menu with platform-aware "Check for Updates"
 const template = [
   {
     label: 'AudioCV',
@@ -54,7 +74,11 @@ const template = [
       {
         label: 'Check for Updates',
         click: () => {
-          autoUpdater.checkForUpdates();
+          if (os.platform() === 'win32') {
+            autoUpdater.checkForUpdates();
+          } else {
+            checkManualUpdatesMac();
+          }
         }
       },
       { type: 'separator' },
