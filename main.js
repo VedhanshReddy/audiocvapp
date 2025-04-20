@@ -65,6 +65,15 @@ autoUpdater.on('update-downloaded', () => {
   });
 });
 
+// Handle error event for auto-updater
+autoUpdater.on('error', (err) => {
+  dialog.showMessageBox({
+    type: 'error',
+    title: 'Update Error',
+    message: `An error occurred while checking for updates: ${err.message}`,
+  });
+});
+
 // App menu with platform-aware "Check for Updates"
 const template = [
   {
@@ -86,13 +95,15 @@ const template = [
     ]
   }
 ];
+
+// Set the application menu
 const menu = Menu.buildFromTemplate(template);
 Menu.setApplicationMenu(menu);
 
-// Handle app ready
+// Handle app ready event
 app.whenReady().then(createWindow);
 
-// File dialog handlers
+// File dialog handlers to open files/folders
 ipcMain.handle('dialog:openFile', async () => {
   const result = await dialog.showOpenDialog(mainWindow, {
     properties: ['openFile'],
@@ -106,4 +117,18 @@ ipcMain.handle('dialog:openFolder', async () => {
     properties: ['openDirectory'],
   });
   return result.filePaths;
+});
+
+// Handle app quit event
+app.on('window-all-closed', () => {
+  if (os.platform() !== 'darwin') {
+    app.quit();
+  }
+});
+
+// Re-create window when app is activated (macOS specific behavior)
+app.on('activate', () => {
+  if (BrowserWindow.getAllWindows().length === 0) {
+    createWindow();
+  }
 });

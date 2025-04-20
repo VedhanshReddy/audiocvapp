@@ -1,5 +1,6 @@
 const { ipcRenderer } = require('electron');
 const AudioProcessor = require('./audioProcessor');
+const DependencyChecker = require('./utils/dependencyChecker');
 const { exec, spawn } = require('child_process');
 const path = require('path');
 
@@ -42,12 +43,16 @@ document.getElementById('fileSelectBtn').addEventListener('click', selectFile);
 document.getElementById('folderSelectBtn').addEventListener('click', selectFolder);
 
 // Update progress display
-function updateProgress(progress, stage) {
+function updateProgress(progress, stage, state = 'processing') {
     requestAnimationFrame(() => {
         const progressBar = document.getElementById('progressBar');
         const progressText = document.getElementById('progressText');
         const status = document.getElementById('status');
         const timeRemaining = document.getElementById('timeRemaining');
+        
+        // Reset all status classes
+        status.classList.remove('error', 'success', 'processing');
+        status.classList.add(state);
         
         progressBar.style.width = `${progress}%`;
         progressText.textContent = ` (${progress}%)`;
@@ -95,7 +100,16 @@ document.getElementById('convertBtn').addEventListener('click', async () => {
         // Reset UI state first
         convertBtn.disabled = true;
         status.className = 'status-text';
-        status.textContent = 'Initializing conversion...';
+        status.textContent = 'Checking dependencies...';
+        progressBar.style.width = '0%';
+        timeRemaining.textContent = 'Setting up...';
+
+        // Check only ffmpeg dependency
+        await DependencyChecker.checkDependencies((progress, message) => {
+            updateProgress(progress, message, 'processing');
+        });
+
+        status.textContent = 'Starting conversion...';
         progressBar.style.width = '0%';
         timeRemaining.textContent = 'Calculating...';
         
