@@ -1,414 +1,156 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+:root {
+  --primary: #2563eb;
+  --bg: #ffffff;
+  --text: #333333;
+  --border: #e5e7eb;
+  --hover: #f3f4f6;
+  --success: #10b981;
+  --error: #ef4444;
 }
 
-/* Body */
 body {
-    font-family:
-        "Inter",
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Roboto,
-        sans-serif;
-    background:
-        radial-gradient(ellipse at top, #2b3a55, #1a1a2e),
-        radial-gradient(ellipse at bottom, #1a1a2e, #0f0f1b);
-    color: #f1f1f1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    flex-direction: column;
-    padding: 20px;
+  font-family: -apple-system, system-ui, sans-serif;
+  margin: 0;
+  padding: 2rem;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
 }
 
-/* Container */
 .container {
-    background: rgba(30, 32, 40, 0.85);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-radius: 24px;
-    padding: 50px 40px;
-    box-shadow:
-        0 20px 50px rgba(0, 0, 0, 0.3),
-        0 0 0 1px rgba(255, 255, 255, 0.1);
-    max-width: 600px;
-    width: 90%;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 2rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
 }
 
-/* Subtle glow effect */
-.container::after {
-    content: "";
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(
-        circle,
-        rgba(255, 255, 255, 0.1) 0%,
-        transparent 60%
-    );
-    opacity: 0.5;
-    pointer-events: none;
+h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: var(--primary);
 }
 
-/* Header */
-.header h1 {
-    font-size: 2.7rem;
-    margin-bottom: 35px;
-    color: #ffffff;
-    font-weight: 800;
-    letter-spacing: -0.5px;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-    position: relative;
-    display: inline-block;
-}
-
-.header h1::after {
-    content: "";
-    position: absolute;
-    width: 40%;
-    height: 4px;
-    background: linear-gradient(90deg, #0a84ff, transparent);
-    bottom: -10px;
-    left: 30%;
-    border-radius: 2px;
-}
-
-/* Input Section */
 .input-section {
-    margin-bottom: 35px;
+  margin-bottom: 2rem;
 }
 
-label {
-    font-size: 1.2rem;
-    display: block;
-    margin-bottom: 12px;
-    color: #e1e1e1;
-    font-weight: 500;
-    letter-spacing: 0.5px;
+.effect-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
 }
 
-button,
-input {
-    font-size: 1.1rem;
-    padding: 16px;
-    border-radius: 14px;
-    border: none;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    outline: none;
-    width: 100%;
+.effect-card {
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.effect-card:hover {
+  background: var(--hover);
+}
+
+.effect-card.selected {
+  border-color: var(--primary);
+  background: var(--hover);
+}
+
+.effect-card h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+}
+
+.effect-card p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #666;
 }
 
 button {
-    background: rgba(10, 132, 255, 0.15);
-    color: #fff;
-    font-weight: 600;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    cursor: pointer;
-    margin-top: 5px;
-    letter-spacing: 0.5px;
-    position: relative;
-    overflow: hidden;
-}
-
-button::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 255, 255, 0.2),
-        transparent
-    );
-    transition: 0.5s;
-}
-
-button:hover::after {
-    left: 100%;
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  width: 100%;
 }
 
 button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(10, 132, 255, 0.3);
+  opacity: 0.9;
 }
 
-button:active {
-    transform: translateY(0);
-}
-
-.convert-btn {
-    background: linear-gradient(135deg, #0a84ff, #0066cc);
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    margin-top: 15px;
-    padding: 18px 16px;
-    box-shadow: 0 4px 15px rgba(10, 132, 255, 0.3);
-}
-
-.convert-btn:hover {
-    background: linear-gradient(135deg, #0091ff, #0074e5);
-    box-shadow: 0 6px 20px rgba(10, 132, 255, 0.4);
-}
-
-.convert-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
-}
-
-/* Input Box */
-input {
-    width: 100%;
-    margin-bottom: 15px;
-    padding: 16px;
-    color: #333;
-    background-color: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    text-align: center;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-}
-
-input:focus {
-    box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.3);
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 input[readonly] {
-    background-color: rgba(240, 240, 240, 0.9);
-    color: #666;
-    cursor: not-allowed;
+  background: var(--hover);
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  width: 100%;
+  margin: 0.5rem 0;
 }
 
-/* Convert Button Section */
-.convert-section {
-    margin-top: 25px;
-}
-
-/* Progress Bar */
 .progress-container {
-    position: relative;
-    width: 100%;
-    height: 36px;
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 18px;
-    margin: 25px 0;
-    overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  background: #f0f0f0;
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 20px 0;
+  height: 20px;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
 }
 
 .progress-bar {
-    position: relative;
-    width: 0;
-    height: 100%;
-    background: linear-gradient(90deg, #0a84ff, #00c6ff);
-    border-radius: 18px;
-    transition: width 0.3s ease-in-out;
-    box-shadow: 0 2px 10px rgba(10, 132, 255, 0.4);
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  position: relative;
 }
 
-.progress-bar::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 255, 255, 0.2),
-        transparent
-    );
-    animation: shimmer 1.5s infinite;
+.progress {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background: linear-gradient(90deg, #2563eb, #3b82f6);
+  transition: width 0.3s ease;
 }
 
 .progress-text {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    font-weight: 600;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-    z-index: 1;
-    font-size: 1.1rem;
-}
-
-/* Status Text */
-#status {
-    font-size: 1.15rem;
-    font-weight: 600;
-    color: #fff;
-    margin-top: 20px;
-    padding: 14px 22px;
-    border-radius: 12px;
-    background: rgba(10, 132, 255, 0.2);
-    transition: all 0.3s ease;
-    display: inline-block;
-}
-
-#status::after {
-    content: " (" attr(data-progress) "%)";
-    opacity: 0.8;
-}
-
-#status.error {
-    background: rgba(255, 69, 58, 0.2);
-    color: #ff453a;
-}
-
-/* Footer */
-.footer {
-    margin-top: 45px;
-    font-size: 0.95rem;
-    color: rgba(225, 225, 225, 0.8);
-    line-height: 1.5;
-    position: relative;
-    padding-top: 15px;
-}
-
-.footer::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 30%;
-    width: 40%;
-    height: 1px;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 255, 255, 0.2),
-        transparent
-    );
-}
-
-/* File Info */
-.file-info {
-    margin-top: 15px;
-    padding: 12px 16px;
-    background: rgba(255, 255, 255, 0.08);
-    border-radius: 12px;
-    font-size: 0.95rem;
-    display: none;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(5px);
-}
-
-/* Status Container */
-.status-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    margin-top: 20px;
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  color: #fff;
+  font-weight: 500;
+  text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+  z-index: 1;
 }
 
 .status-text {
-    font-size: 1.15rem;
-    font-weight: 600;
-    color: #fff;
-    padding: 12px 20px;
-    border-radius: 12px;
-    background: rgba(10, 132, 255, 0.2);
-    transition: all 0.3s ease;
-    display: inline-block;
-    min-width: 180px;
-}
-
-.status-text.processing {
-    background: rgba(10, 132, 255, 0.2);
-    position: relative;
-    overflow: hidden;
-}
-
-.status-text.processing::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 255, 255, 0.2),
-        transparent
-    );
-    animation: shimmer 1.5s infinite;
-}
-
-.status-text.error {
-    background: rgba(255, 69, 58, 0.15);
-    color: #ff453a;
-    border: 1px solid rgba(255, 69, 58, 0.3);
+  margin-top: 10px;
+  text-align: center;
+  font-weight: 500;
 }
 
 .status-text.success {
-    background: rgba(48, 209, 88, 0.15);
-    color: #30d158;
-    border: 1px solid rgba(48, 209, 88, 0.3);
+  color: var(--success);
 }
 
-.time-text {
-    font-size: 0.95rem;
-    color: rgba(255, 255, 255, 0.75);
-    letter-spacing: 0.2px;
-    margin-top: 8px;
+.status-text.error {
+  color: var(--error);
 }
 
-/* Media Queries */
-@media (max-width: 600px) {
-    .container {
-        padding: 30px 20px;
-        width: 95%;
-        border-radius: 20px;
-    }
-
-    .header h1 {
-        font-size: 2.2rem;
-        margin-bottom: 25px;
-    }
-
-    button,
-    input {
-        font-size: 1rem;
-        padding: 14px;
-    }
-
-    .convert-btn {
-        padding: 16px 14px;
-    }
-
-    .progress-container {
-        height: 30px;
-    }
-
-    .progress-text {
-        font-size: 1rem;
-    }
-}
-
-@keyframes shimmer {
-    0% {
-        transform: translateX(-100%);
-    }
-    100% {
-        transform: translateX(100%);
-    }
+.footer {
+  text-align: center;
+  margin-top: 2rem;
+  color: #666;
+  font-size: 0.9rem;
 }

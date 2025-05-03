@@ -14,6 +14,7 @@ let inputFile = '';
 let outputFolder = '';
 let startTime = 0;
 let conversionStartTime = 0;
+let selectedEffect = '8d';
 
 // Function to open file selection dialog
 async function selectFile() {
@@ -41,6 +42,15 @@ document.getElementById('fileSelectBtn').addEventListener('click', selectFile);
 
 // Handle output folder selection
 document.getElementById('folderSelectBtn').addEventListener('click', selectFolder);
+
+// Add effect selection handling
+document.querySelectorAll('.effect-card').forEach(card => {
+    card.addEventListener('click', () => {
+        document.querySelectorAll('.effect-card').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        selectedEffect = card.dataset.effect;
+    });
+});
 
 // Update progress display
 function updateProgress(progress, stage, state = 'processing') {
@@ -124,6 +134,7 @@ document.getElementById('convertBtn').addEventListener('click', async () => {
         await AudioProcessor.process(
             inputFile, 
             outputPath,
+            selectedEffect,
             updateProgress,
             (error) => {
                 status.textContent = error;
